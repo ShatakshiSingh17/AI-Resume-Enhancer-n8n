@@ -1,0 +1,474 @@
+{
+  "name": "Resume Enhancer AI",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "###  Bonus (optional)\nConnect the `Output (News Summary)` to the node below, add your Google account info, and send the News summary by email.",
+        "height": 112,
+        "width": 384,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        544,
+        16
+      ],
+      "id": "5e33fbe1-1971-48f8-81c7-08bd32e24aca",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        752,
+        64
+      ],
+      "id": "fe54377b-e03b-4a1d-a6e7-d6532512e4f5",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/YOUR_USERNAME~linkedin-jobs-scraper/run-sync-get-dataset-items?token=<YOUR_APIFY_API_TOKEN>",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n    \"count\": 100,\n    \"scrapeCompany\": true,\n    \"urls\": [\n        \"https://www.linkedin.com/jobs/search-results/?f_TPR=r86400&keywords=data%20analyst\"\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        928,
+        64
+      ],
+      "id": "0911899e-69c0-42f3-a1ad-f248e845a500",
+      "name": "LinkedIn Jobs Scraper",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "JTdGXps485XDmPQm",
+          "name": "<YOUR_APIFY_CREDENTIAL>"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "1hI0LFV_g3Qd9eiscled59KKE9HQkg7nBjQ-WPee9SXA"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1248,
+        64
+      ],
+      "id": "5eff8972-9142-4643-8586-8e1dd2523172",
+      "name": "Get Original Resume",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "d2GGYb3bbssmlCkF",
+          "name": "<YOUR_GOOGLE_CREDENTIAL>"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Here is the job posting information:\nCompany Name: {{ $('Limit 10').item.json.companyName }}\nJob Description: {{ $('Limit 10').item.json.descriptionHtml }}\n\nHere is the candidate's resume: {{ $json.content }}"
+            },
+            {
+              "content": "=You are an expert LinkedIn filtering agent. Your task is to determine whether or not a job posting is suitable for a specific candidate with the provided resume.\n\nHere is the job posting information:\nCompany Name: {{ $('Limit 10').item.json.companyName }}\nJob Description: {{ $('Limit 10').item.json.descriptionHtml }}\n\nHere is the candidate's resume: {{ $json.content }}\n\nIf you believe that the job posting is suitable to the candidate according to their skills, experience and knowledge, output \"true\". If you do not think that the job posting is suitable, output \"false\".\n\nOutput in this JSON format:\n{\n  \"company_name\": \"{{ $json.company_name }}\",\n  \"job_description\": \"{{ $json.job_description }}\",\n  \"is_suitable\": \"{{ $json.is_suitable }}\",\n  \"justification\": \"{{ $json.justification }}\"\n}\n\nFor the output of the job description, summarize into 3 sentences max.",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1408,
+        64
+      ],
+      "id": "e6ad3144-0c72-4f14-b1a2-950d4d5a71f7",
+      "name": "Filtering Agent",
+      "credentials": {
+        "openAiApi": {
+          "id": "sS507A603PW3ly2x",
+          "name": "<YOUR_OPENAI_CREDENTIAL>"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4c4670f7-5bff-42b8-8d05-b514c6c3dd2d",
+              "leftValue": "={{ $json.message.content.is_suitable }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        64
+      ],
+      "id": "2135c90b-eeac-4a8c-9db2-c6d1095e3695",
+      "name": "Filter Only Suitable"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Job Posting Description:  {{ $json.message.content.job_description }}\nCandidate's Original Resume: {{ $('Get Original Resume').item.json.content }}",
+        "options": {
+          "systemMessage": "=You are a Resume Enhancement Specialist. Your task is to enhance the provided resume based on the job requirements from LinkedIn job postings.\n\nINSTRUCTIONS:\n1. Take the original resume content and the job posting details\n2. Enhance the resume to better match the job requirements\n3. Keep all original sections: Summary, Experience, Education, Skills, Projects, Awards & Certifications\n4. Improve the content to highlight relevant skills and experiences\n5. Maintain the professional structure and formatting\n6. Output the COMPLETE enhanced resume with ALL sections\n\nIMPORTANT FORMATTING RULES:\n- Output ONLY clean HTML content, no markdown formatting\n- Do NOT include ```html or ``` or backticks in your response\n- Do NOT include the word \"html\" at the beginning\n- Use this exact structure:\n\n<h1>Shatakshi Singh</h1>\n<div class=\"job-title\"><strong>Business Data Analyst</strong></div>\n\n<div class=\"contact-section\">\n<strong>Contact:</strong>\n<ul>\n<li>Phone: (484)-645-3662</li>\n<li>Email: shatakshiadm@gmail.com</li>\n<li>LinkedIn: linkedin.com/in/shatakshisingh2000</li>\n<li>Location: Jersey City, NJ</li>\n</ul>\n</div>\n\n<h2><strong>Summary</strong></h2>\n<p class=\"summary\">[Enhanced summary based on job description \u2014 highlight analytical expertise, SQL/Python/BI tools, marketing intelligence experience, and measurable outcomes relevant to the target role]</p>\n\n<h2><strong>Experience</strong></h2>\n\n<div class=\"experience-entry\">\n<h3>Amazon Web Services (AWS) \u2014 Business Data Analyst</h3>\n<p><em>Seattle, WA | Mar 2024 \u2013 Present</em></p>\n<ul>\n<li>Architected a self-service Marketing Intelligence Portal by conducting 25+ stakeholder interviews and integrating QuickSight and SQL, reducing data access time by 40% and scaling reporting for 3.5K users to enable faster marketing and executive insights.</li>\n<li>Standardized 50+ dashboards and KPIs by mapping pain points and creating intuitive workflows using Power BI and ETL pipelines, improving user satisfaction by 30% and eliminating redundant reporting.</li>\n<li>Accelerated delivery through persona-based UX research, Figma prototyping, and Asana tracking, finalizing wireframes 3 months early and expanding stakeholder engagement by 25%.</li>\n</ul>\n</div>\n\n<div class=\"experience-entry\">\n<h3>CWAVE Solutions \u2014 Data Analyst Intern</h3>\n<p><em>Exton, PA | May 2024 \u2013 Aug 2024</em></p>\n<ul>\n<li>Developed Power BI dashboards with automated refreshes to track cybersecurity incidents and SLA adherence, reducing manual reporting by 30% and improving executive response time.</li>\n<li>Engineered Databricks ETL pipelines with Delta Lake and PySpark to unify SIEM log data from 5 sources, boosting reporting speed by 40% and improving data accuracy.</li>\n<li>Analyzed 100K+ access logs using SQL window functions and anomaly detection, defining KPIs and source-to-target mappings that strengthened audit readiness for threat classification.</li>\n</ul>\n</div>\n\n<div class=\"experience-entry\">\n<h3>Pennsylvania State University \u2014 Research Data Analyst</h3>\n<p><em>Malvern, PA | Sep 2023 \u2013 Dec 2024</em></p>\n<ul>\n<li>Evaluated aircraft engine performance data using Random Forest, XGBoost, and statistical validation to identify maintenance predictors, reducing projected costs by 15%.</li>\n<li>Built a predictive maintenance ML pipeline leveraging telematics and sensor data, reducing unscheduled downtime by 15%.</li>\n</ul>\n</div>\n\n<div class=\"experience-entry\">\n<h3>LG Electronics \u2014 Data Analyst Intern</h3>\n<p><em>Noida, India | Jun 2022 \u2013 Dec 2022</em></p>\n<ul>\n<li>Preprocessed 50K+ customer reviews using Python (pandas, NLTK, SpaCy) for sentiment analysis pipelines supporting e-commerce product feedback.</li>\n<li>Applied SVM, CNN, and LSTM models to classify sentiment and predict ratings, uncovering behavioral trends that informed UX and product improvements.</li>\n<li>Delivered insights from predictive NLP workflows contributing to an 18% increase in customer satisfaction for LG\u2019s e-commerce product lines.</li>\n</ul>\n</div>\n\n<h2><strong>Projects</strong></h2>\n\n<div class=\"project-entry\">\n<h3>E-commerce Trend Analysis</h3>\n<ul>\n<li>Analyzed 3K+ U.S. transactions with Python EDA to uncover category-wise sales trends and regional growth drivers.</li>\n<li>Built Tableau dashboards for executive visibility into KPIs like sales and profit margins, enabling faster pricing and fulfillment decisions.</li>\n</ul>\n</div>\n\n<div class=\"project-entry\">\n<h3>Customer Churn & Retention Dashboard</h3>\n<ul>\n<li>Created Power BI dashboards integrated with SQL and Python to track churn rate and ARPU, reducing manual reporting by 40%.</li>\n<li>Performed cohort analysis to identify high-risk customer segments, improving retention strategy and lowering projected churn by 18%.</li>\n</ul>\n</div>\n\n<h2><strong>Education</strong></h2>\n<p><strong>The Pennsylvania State University</strong> \u2014 Malvern, PA<br>\n<em>Master of Data Analytics | Graduation: Dec 2024</em><br>\nSpecialization: Big Data Systems | Awarded Warren Musser Fellowship</p>\n\n<h2><strong>Skills</strong></h2>\n<ul>\n<li><strong>Programming & Data:</strong> Python, R, SQL, PostgreSQL, Java, C/C++, MATLAB</li>\n<li><strong>Data & BI Tools:</strong> Power BI, Tableau, Excel, Databricks, AWS QuickSight, Google BigQuery, Oracle</li>\n<li><strong>Cloud & Dev Tools:</strong> Git, Apache Spark, Data Factory, Jarvis Data Lake, AMPS</li>\n<li><strong>Analytics & Modeling:</strong> Machine Learning, NLP, ETL, Data Modeling, Feature Engineering, Visualization</li>\n<li><strong>Design & Productivity:</strong> UI/UX Design, Figma, Microsoft Office</li>\n</ul>\n\n<h2><strong>Awards & Certifications</strong></h2>\n<ul>\n<li>Microsoft Certified: Power BI Data Analyst Associate \u2013 Mar 2025</li>\n<li>Google Cloud \u2013 Cloud Digital Leader \u2013 Nov 2024</li>\n<li>Oracle Analytics Cloud Professional \u2013 Oct 2025</li>\n</ul>\n\nStart your response directly with <h1> and end with the last job entry. No extra text or formatting markers."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        432
+      ],
+      "id": "c7b36629-f9a9-43ac-8999-718b6de370c8",
+      "name": "Resume Enhancement Specialist"
+    },
+    {
+      "parameters": {
+        "folderId": "1wAg_DSdUOBcxOJ2VI7U_FiQEZmSNscGu",
+        "title": "=Edited Resume \u2013 {{ $('Limit 5').first().json.message.content.company_name }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        448
+      ],
+      "id": "d52c1abc-80cf-4886-a023-b82aa0ff7476",
+      "name": "Create Enhanced Resume",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "d2GGYb3bbssmlCkF",
+          "name": "<YOUR_GOOGLE_CREDENTIAL>"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "<REDACTED_GOOGLE_DOCS_URL>",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDocsOAuth2Api",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"content-type\":\"text/html\"\n}",
+        "sendBody": true,
+        "contentType": "raw",
+        "body": "={{ $('HTML Formatter').item.json.enhanced_resume_html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1584,
+        448
+      ],
+      "id": "be9cf9d8-f6b6-40c4-84e8-d8034768ef70",
+      "name": "Upload Updated Resume",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "d2GGYb3bbssmlCkF",
+          "name": "<YOUR_GOOGLE_CREDENTIAL>"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the enhanced resume content from the AI agent\nlet enhancedContent = $input.first().json.output;\n\n// Clean up any unwanted HTML artifacts or markdown formatting\nenhancedContent = enhancedContent\n    .replace(/^```html\\s*/i, '')  // Remove opening ```html\n    .replace(/\\s*```\\s*$/i, '')   // Remove closing ```\n    .replace(/^`html\\s*/i, '')    // Remove `html\n    .replace(/^html\\s*/i, '')     // Remove html at start\n    .replace(/^\\s*}\\s*html\\s*/i, '') // Remove }html\n    .replace(/^\\s*`\\s*/i, '')     // Remove leading backticks\n    .trim();\n\n// HTML template with styling to match original resume format exactly\nconst htmlTemplate = `\n<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <style>\n        body {\n            font-family: Arial, sans-serif;\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 40px;\n            line-height: 1.3;\n            color: #333;\n            background-color: white;\n            font-size: 14px;\n        }\n        \n        h1 {\n            font-size: 28px;\n            font-weight: bold;\n            margin-bottom: 8px;\n            margin-top: 0;\n            color: #000;\n        }\n        \n        .job-title {\n            font-size: 16px;\n            font-weight: bold;\n            margin-bottom: 15px;\n            margin-top: 5px;\n            color: #333;\n        }\n        \n        .contact-section {\n            margin-bottom: 20px;\n        }\n        \n        .contact-section strong {\n            font-weight: bold;\n            display: block;\n            margin-bottom: 8px;\n        }\n        \n        .contact-section ul {\n            list-style: disc;\n            margin-left: 18px;\n            margin-top: 0;\n            margin-bottom: 0;\n            padding: 0;\n        }\n        \n        .contact-section li {\n            margin-bottom: 2px;\n            line-height: 1.2;\n        }\n        \n        h2 {\n            font-size: 16px;\n            font-weight: bold;\n            margin-top: 20px;\n            margin-bottom: 10px;\n            color: #000;\n        }\n        \n        .job-entry {\n            margin-bottom: 20px;\n        }\n        \n        .job-title-line {\n            font-weight: bold;\n            margin-bottom: 2px;\n            line-height: 1.2;\n        }\n        \n        .job-company {\n            font-style: italic;\n            margin-bottom: 8px;\n            line-height: 1.2;\n        }\n        \n        .job-duties ul {\n            list-style: disc;\n            margin-left: 18px;\n            margin-top: 5px;\n            margin-bottom: 0;\n            padding: 0;\n        }\n        \n        .job-duties li {\n            margin-bottom: 5px;\n            line-height: 1.3;\n        }\n        \n        p {\n            margin-bottom: 10px;\n            margin-top: 0;\n            text-align: justify;\n            line-height: 1.3;\n        }\n        \n        a {\n            color: #0066cc;\n            text-decoration: none;\n        }\n        \n        a:hover {\n            text-decoration: underline;\n        }\n        \n        .summary {\n            text-align: justify;\n            margin-bottom: 20px;\n            line-height: 1.3;\n        }\n        \n        /* Ensure proper spacing for different elements */\n        strong {\n            font-weight: bold;\n        }\n        \n        em {\n            font-style: italic;\n        }\n        \n        /* Remove extra spacing from nested elements */\n        ul {\n            margin-top: 0;\n            margin-bottom: 0;\n        }\n        \n        li {\n            line-height: 1.3;\n        }\n    </style>\n</head>\n<body>\n    ${enhancedContent}\n</body>\n</html>\n`;\n\n// Return the formatted HTML\nreturn [{ \n    json: { \n        enhanced_resume_html: htmlTemplate,\n        enhanced_resume_formatted: enhancedContent,\n        original_ai_output: enhancedContent\n    } \n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        448
+      ],
+      "id": "4718724f-b56e-4328-b2e0-ea7db0205311",
+      "name": "HTML Formatter"
+    },
+    {
+      "parameters": {
+        "content": "## Filtering Suitable Positions",
+        "height": 368,
+        "width": 928,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        -64
+      ],
+      "id": "e8d81f94-5332-43c0-b78f-f37ad9606442",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        560
+      ],
+      "id": "15abfe9c-19aa-466a-a99e-5ddd07ff98b8",
+      "name": "4.1 mini",
+      "credentials": {
+        "openAiApi": {
+          "id": "mMVKjIhLvRjyGqOy",
+          "name": "<YOUR_OPENAI_CREDENTIAL>"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Scrape LinkedIn Job Openings",
+        "height": 368,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        624,
+        -64
+      ],
+      "id": "b59ba84b-7362-4dee-a8db-d7b13ad22ac7",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Enhance & Output",
+        "height": 352,
+        "width": 1520,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        624,
+        320
+      ],
+      "id": "6f1e3cfe-44e4-4605-a778-0f5b2d9c5d6a",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1936,
+        64
+      ],
+      "id": "2dcf1ae5-c2c9-4cd7-bb29-1d332232b0e2",
+      "name": "Limit 5"
+    },
+    {
+      "parameters": {
+        "maxItems": 10
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        64
+      ],
+      "id": "1c1c215b-1cbe-44b8-a210-e3ea38285480",
+      "name": "Limit 10"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn Jobs Scraper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Jobs Scraper": {
+      "main": [
+        [
+          {
+            "node": "Limit 10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Original Resume": {
+      "main": [
+        [
+          {
+            "node": "Filtering Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtering Agent": {
+      "main": [
+        [
+          {
+            "node": "Filter Only Suitable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Only Suitable": {
+      "main": [
+        [
+          {
+            "node": "Limit 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resume Enhancement Specialist": {
+      "main": [
+        [
+          {
+            "node": "HTML Formatter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Enhanced Resume": {
+      "main": [
+        [
+          {
+            "node": "Upload Updated Resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Formatter": {
+      "main": [
+        [
+          {
+            "node": "Create Enhanced Resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Updated Resume": {
+      "main": [
+        []
+      ]
+    },
+    "4.1 mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Resume Enhancement Specialist",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit 5": {
+      "main": [
+        [
+          {
+            "node": "Resume Enhancement Specialist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit 10": {
+      "main": [
+        [
+          {
+            "node": "Get Original Resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1eb6b8c9-e0fc-4eac-b66e-ba987b694740",
+  "meta": {
+    "templateId": "ready-to-run-ai-workflow-v3",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0902036178aaa0759244b4b3e6b760e987ebf48e5e128f2fc86a6cfeeb4f6ca3"
+  },
+  "id": "nUrNDl6XZ01P8dhN",
+  "tags": []
+}
