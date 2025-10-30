@@ -6,17 +6,17 @@ This tool was designed to help job seekers, especially those in data analytics, 
 
 ---
 
-## ✨ Features
+## Features
 
-- 🧠 Connects with OpenAI API (GPT-4/GPT-3.5) for resume enhancement
-- 📄 Formats output into a clean, styled HTML resume
-- 📁 Saves the enhanced resume directly to a Google Drive folder
-- 📌 Uses dynamic job descriptions and company names for personalized titles
-- 🔁 Works as an n8n workflow (modular and scalable)
+- Connects with OpenAI API (GPT-4/GPT-3.5) for resume enhancement
+- Formats output into a clean, styled HTML resume
+- Saves the enhanced resume directly to a Google Drive folder
+- Uses dynamic job descriptions and company names for personalized titles
+- Works as an n8n workflow (modular and scalable)
 
 ---
 
-## 🚀 How It Works (Workflow Overview)
+## How It Works (Workflow Overview)
 
 1. **Input Resume Content**: Original resume text (from markdown, plain text, or HTML).
 2. **Fetch Job Description**: Pull job title and description dynamically or manually.
@@ -26,7 +26,7 @@ This tool was designed to help job seekers, especially those in data analytics, 
 
 ---
 
-## 🛠 Tools & APIs Used
+## Tools & APIs Used
 
 | Tool         | Purpose                                    |
 |--------------|--------------------------------------------|
@@ -37,7 +37,7 @@ This tool was designed to help job seekers, especially those in data analytics, 
 
 ---
 
-## 🧪 How to Use Locally
+## How to Use Locally
 
 ### Prerequisites
 
@@ -67,22 +67,22 @@ This tool was designed to help job seekers, especially those in data analytics, 
 
 ---
 
-## 🖼 Sample Output
+## Sample Output
 
 Check the sample resume in this repo: [`Resume enhancer.pdf`](./Resume%20enhancer.pdf)
 
 ---
 
-## 📌 Project Status
+## Project Status
 
-✅ Functional and tested  
-🛠️ Can be extended to support:
+ Functional and tested  
+ Can be extended to support:
 - LinkedIn job scraping
 - Resume keyword optimization
 - PDF formatting output (via Google Docs to PDF)
 
 ---
 
-## 📄 License
+## License
 
 MIT License – feel free to use, adapt, and improve it.
