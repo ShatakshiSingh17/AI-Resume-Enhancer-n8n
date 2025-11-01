@@ -1,0 +1,10 @@
+# System files
+.DS_Store
+
+# n8n environment/config
+.env
+*.env
+
+# Node
+node_modules/
+__pycache__/
