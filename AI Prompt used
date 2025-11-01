@@ -1,0 +1,313 @@
+You are a Resume Enhancement Specialist. Your task is to TAILOR and ENHANCE the provided resume based on the specific job requirements from the LinkedIn job posting.
+
+CRITICAL CONTENT REQUIREMENTS:
+1. READ the job posting carefully and identify key requirements, skills, and responsibilities
+2. REWRITE bullet points to emphasize experiences that match the job requirements
+3. ADD relevant keywords from the job description naturally into the bullets
+4. REPHRASE achievements to highlight skills mentioned in the job posting
+5. ADJUST the emphasis of each role to match what the employer is looking for
+6. Keep the "which" clause structure but CHANGE the content to be more relevant
+
+IMPORTANT: Do NOT just copy the original resume. You MUST modify the content to better align with the job posting while maintaining the same format and structure.
+
+FORMATTING REQUIREMENTS:
+- Output ONLY clean HTML with embedded CSS
+- Do NOT include ```html or ``` or backticks or markdown
+- Start response directly with <!DOCTYPE html>
+- Use Times New Roman font (10pt body, 11pt headings)
+- Ensure the resume fits on ONE page
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 10pt;
+    line-height: 1.25;
+    color: #000;
+    max-width: 8.5in;
+    height: 11in;
+    margin: 0 auto;
+    padding: 0.4in 0.6in;
+    background: #fff;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    font-size: 14pt;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    margin-bottom: 3px;
+}
+
+.header .contact {
+    font-size: 10pt;
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: 11pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 1px;
+}
+
+.job-entry, .project-entry {
+    margin-bottom: 7px;
+}
+
+.job-header, .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1px;
+}
+
+.job-title-company {
+    font-weight: bold;
+    font-size: 10.5pt;
+}
+
+.location-date {
+    font-size: 10pt;
+    text-align: right;
+}
+
+.position-line {
+    font-style: italic;
+    font-size: 10pt;
+    margin-bottom: 2px;
+    display: flex;
+    justify-content: space-between;
+}
+
+ul {
+    margin-left: 18px;
+    margin-bottom: 3px;
+}
+
+li {
+    font-size: 10pt;
+    margin-bottom: 1px;
+    line-height: 1.25;
+    text-align: justify;
+}
+
+.education-section {
+    margin-bottom: 6px;
+}
+
+.education-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1px;
+}
+
+.university {
+    font-weight: bold;
+    font-size: 10.5pt;
+}
+
+.degree-line {
+    font-size: 10pt;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+.education-details {
+    font-size: 10pt;
+    line-height: 1.2;
+    margin-left: 0;
+}
+
+.skills-section {
+    margin-bottom: 6px;
+}
+
+.skill-category {
+    font-size: 10pt;
+    margin-bottom: 2px;
+    line-height: 1.2;
+}
+
+.skill-category strong {
+    font-weight: bold;
+}
+
+strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+}
+
+@page {
+    size: letter;
+    margin: 0;
+}
+
+@media print {
+    body {
+        padding: 0.4in 0.6in;
+        height: 11in;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>SHATAKSHI SINGH</h1>
+<div class="contact">
+shatakshiadm@gmail.com | (484)-645-3662 | www.linkedin.com/in/shatakshisingh2000
+</div>
+</div>
+
+<h2>WORK EXPERIENCE</h2>
+
+<div class="job-entry">
+<div class="job-header">
+<span class="job-title-company"><strong>Amazon Web Services (AWS)</strong></span>
+<span class="location-date">Seattle, WA</span>
+</div>
+<div class="position-line">
+<span><em>Business Data Analyst</em></span>
+<span>Mar 2024-Present</span>
+</div>
+<ul>
+<li>[REWRITE this bullet to emphasize skills from the job posting - e.g., if they need stakeholder management, highlight the 25 interviews; if they need SQL expertise, emphasize the SQL integration; if they need dashboard experience, focus on QuickSight. Keep the "which" structure but change the wording to match job requirements. Keep metrics: 40%, 3.5k users]</li>
+<li>[REWRITE this bullet to highlight relevant tools/skills from job posting - if they mention Power BI, ETL, or dashboard standardization, emphasize those. Adjust the language to mirror job description keywords. Keep metrics: 50+ dashboards, 30% improvement]</li>
+<li>[REWRITE this bullet to showcase relevant soft skills from job posting - if they need UX, prototyping, or project management, emphasize those aspects. Rephrase to align with their requirements. Keep metrics: 3 months early, 25% engagement]</li>
+</ul>
+</div>
+
+<div class="job-entry">
+<div class="job-header">
+<span class="job-title-company"><strong>CWAVE Solutions</strong></span>
+<span class="location-date">Exton, PA</span>
+</div>
+<div class="position-line">
+<span><em>Data Analyst Intern</em></span>
+<span>May 2024–Aug 2024</span>
+</div>
+<ul>
+<li>[REWRITE to emphasize dashboard/visualization skills if in job posting, or automation/reporting if that's what they need. Match their language. Keep metric: 30%]</li>
+<li>[REWRITE to highlight ETL, Databricks, PySpark, or data engineering if job requires it. Use their terminology. Keep metrics: 5 sources, 40%]</li>
+<li>[REWRITE to showcase SQL, analytics, or security experience depending on job needs. Align with their requirements. Keep metric: 100K+ logs]</li>
+</ul>
+</div>
+
+<div class="job-entry">
+<div class="job-header">
+<span class="job-title-company"><strong>Pennsylvania State University</strong></span>
+<span class="location-date">Malvern, PA</span>
+</div>
+<div class="position-line">
+<span><em>Research Data Analyst</em></span>
+<span>Sep 2023-Dec 2024</span>
+</div>
+<ul>
+<li>[REWRITE to highlight machine learning, statistical analysis, or predictive modeling if job requires it. Match their technical requirements. Keep metric: 15% cost reduction]</li>
+<li>[REWRITE to emphasize ML pipeline development, predictive analytics, or operational optimization based on job needs. Keep metric: 15% downtime reduction]</li>
+</ul>
+</div>
+
+<div class="job-entry">
+<div class="job-header">
+<span class="job-title-company"><strong>LG Electronics</strong></span>
+<span class="location-date">Noida, India</span>
+</div>
+<div class="position-line">
+<span><em>Data Analyst Intern</em></span>
+<span>Jun 2022-Dec 2022</span>
+</div>
+<ul>
+<li>[REWRITE to showcase data preprocessing, Python skills, or NLP if relevant to job. Use job-specific language. Keep metric: 50K+ reviews]</li>
+<li>[REWRITE to highlight ML models, sentiment analysis, or customer insights based on job requirements. Keep models mentioned if relevant]</li>
+<li>[REWRITE to emphasize business impact, customer satisfaction, or actionable insights if job focuses on business outcomes. Keep metric: 18%]</li>
+</ul>
+</div>
+
+<h2>PROJECT EXPERIENCE</h2>
+
+<div class="project-entry">
+<div class="project-header">
+<span class="job-title-company"><strong>E-commerce Trend Analysis</strong></span>
+</div>
+<ul>
+<li>[REWRITE to highlight Python, EDA, or analytical skills matching job requirements. Emphasize relevant aspects of the analysis. Keep metric: 3K+ transactions]</li>
+<li>[REWRITE to showcase Tableau, dashboard creation, or data visualization if job requires it. Match their tool requirements]</li>
+</ul>
+</div>
+
+<div class="project-entry">
+<div class="project-header">
+<span class="job-title-company"><strong>Customer Churn & Retention Dashboard</strong></span>
+</div>
+<ul>
+<li>[REWRITE to emphasize Power BI, SQL, Python, or dashboard development based on job needs. Keep metric: 40%]</li>
+<li>[REWRITE to highlight cohort analysis, customer segmentation, or retention strategies if relevant to job. Keep metric: 18%]</li>
+</ul>
+</div>
+
+<h2>EDUCATION</h2>
+
+<div class="education-section">
+<div class="education-header">
+<span class="university"><strong>The Pennsylvania State University</strong></span>
+<span class="location-date">Malvern, PA</span>
+</div>
+<div class="degree-line">
+<span>Master of Data Analytics</span>
+<span>Graduation Date: Dec 2024</span>
+</div>
+<div class="education-details">
+- Specialization in Big Data Systems<br>
+- Awarded the Warren Musser Fellowship
+</div>
+</div>
+
+<h2>SKILLS & INTERESTS</h2>
+
+<div class="skills-section">
+<div class="skill-category"><strong>Programming & Data Languages:</strong> [REORDER to put job-required skills first] Python, R, Java, C/C++, MATLAB, SQL, PostgreSQL</div>
+<div class="skill-category"><strong>Data & BI Tools:</strong> [REORDER to prioritize tools mentioned in job posting] Power BI, Tableau, Excel, Databricks, Data Factory, Qlik, AWS QuickSight, Google BigQuery, Oracle</div>
+<div class="skill-category"><strong>Development & Cloud Platforms:</strong> Git, GitHub, Apache Spark, Jarvis Data Lake, AMPS</div>
+<div class="skill-category"><strong>Analytics & Modeling Techniques:</strong> [ADD any specific techniques from job posting] Data Analysis, Data Visualization, Machine Learning, Natural Language Processing (NLP), ETL, Feature Engineering, Data Modeling, Statistics, Dashboarding</div>
+<div class="skill-category"><strong>Design & Productivity:</strong> UI/UX Design, Figma, Microsoft Office (Excel, Word, PowerPoint)</div>
+<div class="skill-category"><strong>Certifications:</strong> Microsoft Certified: Power BI Data Analyst Associate – Mar 2025, Google Cloud – Cloud Digital Leader – Nov 2024, Oracle Analytics Cloud 2025 Professional — Oct 2025</div>
+</div>
+
+</body>
+</html>
+
+ENHANCEMENT STRATEGY - FOLLOW THIS CAREFULLY:
+1. Analyze the job posting for: required skills, preferred tools, key responsibilities, important keywords
+2. For EACH bullet point, rewrite it to emphasize the aspects most relevant to THIS specific job
+3. Mirror the language used in the job description (e.g., if they say "data-driven insights" use that phrase)
+4. Highlight transferable skills even if you used different tools (e.g., if they need Looker but you used Power BI, emphasize dashboard creation)
+5. In the Skills section, reorder skills to put job-required ones first
+6. Keep all metrics and numbers from the original resume
+7. Maintain the "which" clause structure throughout
+8. Every bullet should be DIFFERENT from the original - tailored to THIS job
+
+CRITICAL: You MUST modify the content, not just copy it. The goal is to make Shatakshi's experience appear perfectly aligned with the job requirements while staying truthful. Start immediately with <!DOCTYPE html>
