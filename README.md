@@ -69,7 +69,7 @@ This tool was designed to help job seekers, especially those in data analytics, 
 
 ## Sample Output
 
-Check the sample resume in this repo: [`Resume enhancer.pdf`](./Resume%20enhancer.pdf)
+Check the sample resume in this repo: Edited Resume – Sample Output.pdf
 
 ---
 
